@@ -1,0 +1,25 @@
+{
+  "name": "webRTC",
+  "version": "1.0.0",
+  "description": "webRTC",
+  "main": "client.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tamtama17/webRTC.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tamtama17/webRTC/issues"
+  },
+  "homepage": "https://github.com/tamtama17/webRTC#readme",
+  "dependencies": {
+    "express": "^4.15.4",
+    "socket.io": "^2.0.3"
+  }
+}
