@@ -113,9 +113,10 @@
                 <span>
                     Private ?? <a href="/video-conferencing/" target="_blank" title="Open this link in new tab. Then your conference room will be private!"><code><strong id="unique-token">#123456789</strong></code></a>
                 </span>
-
-                <input type="text" id="conference-name" placeholder="Conference Name" style="width: 50%;">
-                <button id="setup-new-room" class="setup">Setup New Conference</button>
+                <div id="room-create-division">
+                    <input type="text" id="conference-name" placeholder="Conference Name" style="width: 50%;">
+                    <button id="setup-new-room" class="setup">Setup New Conference</button>
+                </div>
             </section>
 
             <!-- list of all available conferencing rooms -->
@@ -187,6 +188,8 @@
                     joinRoomButton.setAttribute('data-roomToken', room.roomToken);
                     joinRoomButton.onclick = function() {
                         this.disabled = true;
+                        var divCreate = document.getElementById("room-create-division");
+                        divCreate.style.display = "none";
 
                         var broadcaster = this.getAttribute('data-broadcaster');
                         var roomToken = this.getAttribute('data-roomToken');
