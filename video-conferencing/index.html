@@ -1,8 +1,3 @@
-<!--
-> Muaz Khan       - wwww.MuazKhan.com
-> MIT License     - www.WebRTC-Experiment.com/licence
-> Documentation   - github.com/muaz-khan/WebRTC-Experiment/tree/master/video-conferencing
--->
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -25,7 +20,7 @@
         <meta name="title" content="Video Conferencing" />
         <meta name="description" content="Video Conferencing using WebRTC." />
         <meta name="keywords" content="WebRTC, Video Conferencing, Demo, Example, Experiment" />
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
         <link rel="stylesheet" href="https://www.webrtc-experiment.com/style.css">
 
         <style>
@@ -72,7 +67,7 @@
 
         <!-- script used to stylize video element -->
         <script src="https://www.webrtc-experiment.com/getMediaElement.min.js"> </script>
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
         <script src="https://www.webrtc-experiment.com/socket.io.js"> </script>
         <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
         <script src="https://www.webrtc-experiment.com/IceServersHandler.js"></script>
@@ -82,54 +77,52 @@
     </head>
 
     <body>
-        <header style="text-align: center;">
-            <h1>
-                WebRTC Video Conferencing
-            </h1>
-            <p>
-                <a href="https://www.webrtc-experiment.com/">HOME</a>
-                <span> &copy; </span>
-                <a href="http://www.MuazKhan.com/" target="_blank">Muaz Khan</a>
-
-                .
-                <a href="http://twitter.com/WebRTCWeb" target="_blank" title="Twitter profile for WebRTC Experiments">@WebRTCWeb</a>
-
-                .
-                <a href="https://github.com/muaz-khan?tab=repositories" target="_blank" title="Github Profile">Github</a>
-
-                .
-                <a href="https://github.com/muaz-khan/WebRTC-Experiment/issues?state=open" target="_blank">Latest issues</a>
-
-                .
-                <a href="https://github.com/muaz-khan/WebRTC-Experiment/commits/master" target="_blank">What's New?</a>
-            </p>
-        </header>
-
-        <div class="github-stargazers"></div>
-
         <!-- just copy this <section> and next script -->
+        <br>
+        <center><h1>Video Converence</h1></center>
+
         <section class="experiment">
             <section>
                 <span>
                     Private ?? <a href="/video-conferencing/" target="_blank" title="Open this link in new tab. Then your conference room will be private!"><code><strong id="unique-token">#123456789</strong></code></a>
                 </span>
-
-                <input type="text" id="conference-name" placeholder="Conference Name" style="width: 50%;">
-                <button id="setup-new-room" class="setup">Setup New Conference</button>
+                <br>
+                <div id="createORjoin">
+                    <center>
+                        <button onclick="createR(this.innerHTML)" class="ui primary basic massive button">Create Room</button>
+                        <button onclick="joinR(this.innerHTML)" class="ui positive basic massive button">Join Room</button>
+                    </center>
+                </div>
+                
+                <br>
+                <div id="newR" hidden="1">
+                    <center>
+                        <input type="text" id="conference-name" placeholder="Conference Name" style="width: 50%;">
+                        <button id="setup-new-room" class="ui secondary button massive"></button>
+                    </center>
+                </div>
+                <br>
             </section>
 
-            <!-- list of all available conferencing rooms -->
+            <!-- list of all available confe    rencing rooms -->
             <table style="width: 100%;" id="rooms-list"></table>
 
             <!-- local/remote videos container -->
             <div id="videos-container"></div>
         </section>
-
         <script>
-            // Muaz Khan     - https://github.com/muaz-khan
-            // MIT License   - https://www.webrtc-experiment.com/licence/
-            // Documentation - https://github.com/muaz-khan/WebRTC-Experiment/tree/master/video-conferencing
-
+            function createR(text1) {
+                document.getElementById("createORjoin").hidden = true;
+                document.getElementById("newR").hidden = false;
+                document.getElementById("setup-new-room").innerHTML=text1;
+            }
+            function joinR(text1) {
+                document.getElementById("createORjoin").hidden = true;
+                document.getElementById("newR").hidden = false;
+                document.getElementById("setup-new-room").innerHTML=text1;
+            }
+        </script>
+        <script>
             var config = {
                 // via: https://github.com/muaz-khan/WebRTC-Experiment/tree/master/socketio-over-nodejs
                 openSocket: function(config) {
@@ -282,7 +275,7 @@
             (function() {
                 var uniqueToken = document.getElementById('unique-token');
                 if (uniqueToken)
-                    if (location.hash.length > 2) uniqueToken.parentNode.parentNode.parentNode.innerHTML = '<h2 style="text-align:center;display: block;"><a href="' + location.href + '" target="_blank">Right click to copy & share this private link</a></h2>';
+                    if (location.hash.length > 2) uniqueToken.parentNode.parentNode.parentNode.innerHTML = '<h2 style="text-align:center;display: block;"><a href="' + location.href + '" target="_blank"></a></h2>';
                     else uniqueToken.innerHTML = uniqueToken.parentNode.parentNode.href = '#' + (Math.random() * new Date().getTime()).toString(36).toUpperCase().replace( /\./g , '-');
             })();
 
@@ -319,27 +312,7 @@
             window.onresize = scaleVideos;
 
         </script>
-
-        <section class="experiment">
-            <ol>
-                <li>This <a href="https://www.webrtc-experiment.com/">WebRTC</a> experiment is aimed to transmit audio/video streams in many-to-many style.</li>
-                <li>It setups multiple peer connections to support multi-user connectivity feature. Remember, <a href="https://www.webrtc-experiment.com/">WebRTC</a> doesn't supports 3-way handshake!</li>
-                <li>Out of multi-peers establishment; many RTP-ports are opened according to number of media streams referenced to each peer connection.</li>
-                <li>Multi-ports establishment will cause <a href="https://www.webrtc-experiment.com/docs/RTP-usage.html">huge CPU and bandwidth usage</a>!</li>
-                <li>Mesh networking model is implemented to open multiple interconnected peer connections.</li>
-                <li>Maximum peer connections limit is 256 (on chrome). It means that 256 users can be interconnected!</li>
-            </ol>
-        </section>
-
         <section class="experiment"><small id="send-message"></small></section>
-
-        <footer>
-            <p>
-                <a href="https://www.webrtc-experiment.com/">WebRTC Experiments</a>
-                © <a href="https://plus.google.com/+MuazKhan" rel="author" target="_blank">Muaz Khan</a>
-                <a href="mailto:muazkh@gmail.com" target="_blank">muazkh@gmail.com</a>
-            </p>
-        </footer>
 
         <!-- commits.js is useless for you! -->
         <script src="https://www.webrtc-experiment.com/commits.js" async> </script>
