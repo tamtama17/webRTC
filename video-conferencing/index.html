@@ -108,9 +108,14 @@
             <table style="width: 100%;" id="rooms-list"></table>
 
             <!-- local/remote videos container -->
-            <div id="videos-container"></div>
+            <div class="ui two column grid">
+                <div class="column" id="videos-container"></div>
+                <div class="column" id="child-container"></div>
+            </div>
+            
         </section>
         <script>
+            var roomcreator=0;
             function createR(text1) {
                 document.getElementById("createORjoin").hidden = true;
                 document.getElementById("newR").hidden = false;
@@ -153,11 +158,11 @@
                 },
                 onRemoteStream: function(media) {
                     var mediaElement = getMediaElement(media.video, {
-                        width: (videosContainer.clientWidth / 2) - 50,
+                        width: (videosContainer.clientWidth / 3.5),
                         buttons: ['mute-audio', 'mute-video', 'full-screen', 'volume-slider']
                     });
                     mediaElement.id = media.stream.streamid;
-                    videosContainer.appendChild(mediaElement);
+                    childContainer.appendChild(mediaElement);
                 },
                 onRemoteStreamEnded: function(stream, video) {
                     if (video.parentNode && video.parentNode.parentNode && video.parentNode.parentNode.parentNode) {
@@ -209,6 +214,8 @@
             };
 
             function setupNewRoomButtonClickHandler() {
+                roomcreator=1;
+
                 btnSetupNewRoom.disabled = true;
                 document.getElementById('conference-name').disabled = true;
                 captureUserMedia(function() {
@@ -241,7 +248,7 @@
                         config.attachStream = stream;
 
                         var mediaElement = getMediaElement(video, {
-                            width: (videosContainer.clientWidth / 2) - 50,
+                            width: (videosContainer.clientWidth/1.05),
                             buttons: ['mute-audio', 'mute-video', 'full-screen', 'volume-slider']
                         });
                         mediaElement.toggle('mute-audio');
@@ -257,11 +264,12 @@
             }
 
             var conferenceUI = conference(config);
-
             /* UI specific */
             var videosContainer = document.getElementById('videos-container') || document.body;
+            var childContainer = document.getElementById('child-container') || document.body;
             var btnSetupNewRoom = document.getElementById('setup-new-room');
             var roomsList = document.getElementById('rooms-list');
+            
 
             if (btnSetupNewRoom) btnSetupNewRoom.onclick = setupNewRoomButtonClickHandler;
 
@@ -313,8 +321,5 @@
 
         </script>
         <section class="experiment"><small id="send-message"></small></section>
-
-        <!-- commits.js is useless for you! -->
-        <script src="https://www.webrtc-experiment.com/commits.js" async> </script>
     </body>
 </html>
