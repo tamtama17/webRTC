@@ -5,7 +5,7 @@
 
         <script>
             if(!location.hash.replace('#', '').length) {
-                location.href = location.href.split('#')[0] + '#' + (Math.random() * 100).toString().replace('.', '');
+                location.href = location.href.split('#')[0] + '#1111111111111111111';
                 location.reload();
             }
         </script>
@@ -73,7 +73,7 @@
         <script src="https://www.webrtc-experiment.com/IceServersHandler.js"></script>
         <script src="https://www.webrtc-experiment.com/CodecsHandler.js"></script>
         <script src="https://www.webrtc-experiment.com/RTCPeerConnection-v1.5.js"> </script>
-        <script src="https://www.webrtc-experiment.com/video-conferencing/conference.js"> </script>
+        <script src="../conference.js"> </script>
     </head>
 
     <body>
@@ -83,9 +83,6 @@
 
         <section class="experiment">
             <section>
-                <span>
-                    Private ?? <a href="/video-conferencing/" target="_blank" title="Open this link in new tab. Then your conference room will be private!"><code><strong id="unique-token">#123456789</strong></code></a>
-                </span>
                 <br>
                 <div id="createORjoin">
                     <center>
@@ -98,7 +95,8 @@
                 <div id="newR" hidden="1">
                     <center>
                         <input type="text" id="conference-name" placeholder="Conference Name" style="width: 50%;">
-                        <button id="setup-new-room" class="ui secondary button massive"></button>
+                        <button id="setup-new-room" class="ui secondary button massive">Create Room</button>
+                        <button id="join-old-room" class="ui secondary button massive">Join Room</button>
                     </center>
                 </div>
                 <br>
@@ -114,12 +112,14 @@
             function createR(text1) {
                 document.getElementById("createORjoin").hidden = true;
                 document.getElementById("newR").hidden = false;
-                document.getElementById("setup-new-room").innerHTML=text1;
+                document.getElementById("setup-new-room").style.display="Block";
+                document.getElementById("join-old-room").style.display="None";
             }
             function joinR(text1) {
                 document.getElementById("createORjoin").hidden = true;
                 document.getElementById("newR").hidden = false;
-                document.getElementById("setup-new-room").innerHTML=text1;
+                document.getElementById("setup-new-room").style.display="None";
+                document.getElementById("join-old-room").style.display="Block";
             }
         </script>
         <script>
@@ -152,9 +152,13 @@
                     socket.on('message', config.onmessage);
                 },
                 onRemoteStream: function(media) {
+                    // var mediaElement = getMediaElement(media.video, {
+                    //     width: (videosContainer.clientWidth / 2) - 50,
+                    //     buttons: ['mute-audio', 'mute-video', 'full-screen', 'volume-slider']
+                    // });
                     var mediaElement = getMediaElement(media.video, {
                         width: (videosContainer.clientWidth / 2) - 50,
-                        buttons: ['mute-audio', 'mute-video', 'full-screen', 'volume-slider']
+                        buttons: ['mute-audio', 'mute-video', 'full-screen']
                     });
                     mediaElement.id = media.stream.streamid;
                     videosContainer.appendChild(mediaElement);
@@ -173,16 +177,22 @@
                     var tr = document.createElement('tr');
                     tr.innerHTML = '<td><strong>' + room.roomName + '</strong> shared a conferencing room with you!</td>' +
                         '<td><button class="join">Join</button></td>';
+                    tr.style.display = "None";
                     roomsList.appendChild(tr);
 
                     var joinRoomButton = tr.querySelector('.join');
+                    joinRoomButton.setAttribute('data-bc'+room.roomName,room.broadcaster);
+                    joinRoomButton.setAttribute('data-tk'+room.roomName,room.roomToken);
+                    joinRoomButton.setAttribute('id', 'leru'+room.roomName);
                     joinRoomButton.setAttribute('data-broadcaster', room.broadcaster);
                     joinRoomButton.setAttribute('data-roomToken', room.roomToken);
-                    joinRoomButton.onclick = function() {
+                    document.getElementById("join-old-room").onclick = function() {
                         this.disabled = true;
 
-                        var broadcaster = this.getAttribute('data-broadcaster');
-                        var roomToken = this.getAttribute('data-roomToken');
+                        var roomName = (document.getElementById('conference-name') || { }).value;
+
+                        var broadcaster = document.getElementById('leru'+roomName).getAttribute('data-bc'+roomName);
+                        var roomToken = document.getElementById('leru'+roomName).getAttribute('data-tk'+roomName);
                         captureUserMedia(function() {
                             conferenceUI.joinRoom({
                                 roomToken: roomToken,
@@ -240,9 +250,13 @@
                     onsuccess: function(stream) {
                         config.attachStream = stream;
 
+                        // var mediaElement = getMediaElement(video, {
+                        //     width: (videosContainer.clientWidth / 2) - 50,
+                        //     buttons: ['mute-audio', 'mute-video', 'full-screen', 'volume-slider']
+                        // });
                         var mediaElement = getMediaElement(video, {
                             width: (videosContainer.clientWidth / 2) - 50,
-                            buttons: ['mute-audio', 'mute-video', 'full-screen', 'volume-slider']
+                            buttons: ['mute-audio', 'mute-video', 'full-screen']
                         });
                         mediaElement.toggle('mute-audio');
                         videosContainer.appendChild(mediaElement);
@@ -261,9 +275,11 @@
             /* UI specific */
             var videosContainer = document.getElementById('videos-container') || document.body;
             var btnSetupNewRoom = document.getElementById('setup-new-room');
+            // var btnJoinOldRoom = document.getElementById('join-old-room');
             var roomsList = document.getElementById('rooms-list');
 
             if (btnSetupNewRoom) btnSetupNewRoom.onclick = setupNewRoomButtonClickHandler;
+            // if (btnJoinOldRoom) btnJoinOldRoom.onclick = joinOldRoomButtonClickHandler;
 
             function rotateVideo(video) {
                 video.style[navigator.mozGetUserMedia ? 'transform' : '-webkit-transform'] = 'rotate(0deg)';
@@ -271,13 +287,6 @@
                     video.style[navigator.mozGetUserMedia ? 'transform' : '-webkit-transform'] = 'rotate(360deg)';
                 }, 1000);
             }
-
-            (function() {
-                var uniqueToken = document.getElementById('unique-token');
-                if (uniqueToken)
-                    if (location.hash.length > 2) uniqueToken.parentNode.parentNode.parentNode.innerHTML = '<h2 style="text-align:center;display: block;"><a href="' + location.href + '" target="_blank"></a></h2>';
-                    else uniqueToken.innerHTML = uniqueToken.parentNode.parentNode.href = '#' + (Math.random() * new Date().getTime()).toString(36).toUpperCase().replace( /\./g , '-');
-            })();
 
             function scaleVideos() {
                 var videos = document.querySelectorAll('video'),
