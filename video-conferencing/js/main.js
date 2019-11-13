@@ -168,11 +168,11 @@ var config = {
         },
         onRemoteStream: function(media) {
             var mediaElement = getMediaElement(media.video, {
-                width: (videosContainer.clientWidth / 2) - 50,
+                width: (childContainer.clientWidth / 3.5),
                 buttons: ['mute-audio', 'mute-video', 'full-screen']
             });
             mediaElement.id = media.stream.streamid;
-            videosContainer.appendChild(mediaElement);
+            childContainer.appendChild(mediaElement);
         },
         onRemoteStreamEnded: function(stream, video) {
             if (video.parentNode && video.parentNode.parentNode && video.parentNode.parentNode.parentNode) {
@@ -195,7 +195,11 @@ var config = {
             joinRoomButton.setAttribute('data-broadcaster', room.broadcaster);
             joinRoomButton.setAttribute('data-roomToken', room.roomToken);
             document.getElementById("join-old-room").onclick = function() {
+                document.getElementById('roomgan').hidden = false;
+                document.getElementById('videogan').hidden = false;
                 document.getElementById('intro').style.display = 'none';
+                document.getElementById('namaroom').innerHTML = 'ROOM '+document.getElementById('conference-name-join').value;
+                $('#joinModal').modal('hide');
                 this.disabled = true;
                 var roomName = (document.getElementById('conference-name-join') || { }).value;
                 var broadcaster = document.getElementById('leru'+roomName).getAttribute('data-bc'+roomName);
@@ -225,7 +229,11 @@ var config = {
         }
     };
     function setupNewRoomButtonClickHandler() {
+        document.getElementById('roomgan').hidden = false;
+        document.getElementById('videogan').hidden = false;   
         document.getElementById('intro').style.display = 'none';
+        document.getElementById('namaroom').innerHTML = 'ROOM '+document.getElementById('conference-name').value;
+        $('#createModal').modal('hide');
         btnSetupNewRoom.disabled = true;
         document.getElementById('conference-name').disabled = true;
         captureUserMedia(function() {
@@ -258,7 +266,7 @@ var config = {
                 //     buttons: ['mute-audio', 'mute-video', 'full-screen', 'volume-slider']
                 // });
                 var mediaElement = getMediaElement(video, {
-                    width: (videosContainer.clientWidth / 2) - 50,
+                    width: (videosContainer.clientWidth/1.05),
                     buttons: ['mute-audio', 'mute-video', 'full-screen']
                 });
                 mediaElement.toggle('mute-audio');
@@ -274,6 +282,7 @@ var config = {
     var conferenceUI = conference(config);
     /* UI specific */
     var videosContainer = document.getElementById('videos-container') || document.body;
+    var childContainer = document.getElementById('child-container') || document.body;
     var btnSetupNewRoom = document.getElementById('setup-new-room');
     var btnJoinOldRoom = document.getElementById('join-old-room');
     var roomsList = document.getElementById('rooms-list');

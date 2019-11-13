@@ -13,7 +13,7 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <meta content="" name="keywords">
   <meta content="" name="description">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
   <!-- Favicons -->
   <link href="img/vc.jpg" rel="icon">
 
@@ -117,7 +117,19 @@
   </section>
 
   <table style="width: 100%;" id="rooms-list"></table>
-  <div id="videos-container"></div>
+  <div hidden="1" id="roomgan">
+    <br>
+    <div class="section-header" style="margin-bottom: 10px; padding-bottom: 1px;">
+      <h2 style="text-transform: none" id="namaroom"></h2>
+    </div>
+    <center><button onclick="window.location.reload();" class="btn btn-danger">exit room</button></center> 
+
+    <br><br>
+  </div>
+  <div hidden="1" id="videogan" class="ui two column grid">
+    <div class="column" id="videos-container"></div>
+    <div class="column" id="child-container"></div>
+  </div>
 
   <a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
 
