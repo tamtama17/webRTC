@@ -4,6 +4,12 @@
 <head>
   <meta charset="utf-8">
   <title>WebRTC VC</title>
+  <script>
+        if(!location.hash.replace('#', '').length) {
+            location.href = location.href.split('#')[0] + '#1111111111111111111';
+            location.reload();
+        }
+    </script>
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <meta content="" name="keywords">
   <meta content="" name="description">
@@ -26,6 +32,16 @@
 
   <!-- Main Stylesheet File -->
   <link href="css/style.css" rel="stylesheet">
+
+  <!-- Untuk Video Conference -->
+  <script src="https://www.webrtc-experiment.com/getMediaElement.min.js"> </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+  <script src="https://www.webrtc-experiment.com/socket.io.js"> </script>
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script src="https://www.webrtc-experiment.com/IceServersHandler.js"></script>
+  <script src="https://www.webrtc-experiment.com/CodecsHandler.js"></script>
+  <script src="https://www.webrtc-experiment.com/RTCPeerConnection-v1.5.js"> </script>
+  <script src="../conference.js"> </script>
 
   <!-- =======================================================
     Theme Name: TheEvent
@@ -67,9 +83,9 @@
             <form class="form-inline">
               <div class="form-group" style="margin: 0 8px 8px 0; width: 81%">
                 <label for="roomName" class="sr-only">Room Name</label>
-                <input type="text" class="form-control" id="roomName" placeholder="Room Name" style="width: 100%">
+                <input type="text" class="form-control" id="conference-name" placeholder="Room Name" style="width: 100%">
               </div>
-              <button type="submit" class="btn btn-primary mb-2">Create</button>
+              <button id="setup-new-room" type="submit" class="btn btn-primary mb-2">Create</button>
             </form>
           </div>
         </div>
@@ -90,15 +106,18 @@
             <form class="form-inline">
               <div class="form-group" style="margin: 0 8px 8px 0; width: 86%">
                 <label for="roomName" class="sr-only">Room Name</label>
-                <input type="text" class="form-control" id="roomName" placeholder="Room Name" style="width: 100%">
+                <input type="text" class="form-control" id="conference-name-join" placeholder="Room Name" style="width: 100%">
               </div>
-              <button type="submit" class="btn btn-primary mb-2">Join</button>
+              <button id="join-old-room" type="submit" class="btn btn-primary mb-2">Join</button>
             </form>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <table style="width: 100%;" id="rooms-list"></table>
+  <div id="videos-container"></div>
 
   <a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
 
