@@ -195,6 +195,7 @@ var config = {
             joinRoomButton.setAttribute('data-broadcaster', room.broadcaster);
             joinRoomButton.setAttribute('data-roomToken', room.roomToken);
             document.getElementById("join-old-room").onclick = function() {
+                document.getElementById('intro').style.display = 'none';
                 this.disabled = true;
                 var roomName = (document.getElementById('conference-name-join') || { }).value;
                 var broadcaster = document.getElementById('leru'+roomName).getAttribute('data-bc'+roomName);
@@ -224,6 +225,7 @@ var config = {
         }
     };
     function setupNewRoomButtonClickHandler() {
+        document.getElementById('intro').style.display = 'none';
         btnSetupNewRoom.disabled = true;
         document.getElementById('conference-name').disabled = true;
         captureUserMedia(function() {
